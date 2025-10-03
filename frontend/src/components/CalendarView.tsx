@@ -64,7 +64,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const month = date.getMonth() + 1;
-    const day = date.getDate();
+    const day = date .getDate();
     return `${month}/${day}`;
   };
 
@@ -189,12 +189,6 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
                 {calendarData.room.equipment.whiteboard && (
                   <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">ホワイトボード</span>
                 )}
- ```
-
-I'll continue writing the component with the calendar table. Let me write the remaining part:
-
-<function_payload>
-{"file_path": "/Users/masaoasano/Cursor/practice/frontend/src/components/CalendarView.tsx", "contents": "                )}
               </div>
             </div>
 
@@ -246,7 +240,7 @@ I'll continue writing the component with the calendar table. Let me write the re
             <div className="bg-gray-50 px-6 py-4 border-t border-gray-200">
               <div className="flex items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
-                  <div className="w-4 h-4 bg-secondary-100 border-secondary-200 rounded border"></div>
+                  <div className="w-4 h-4 bg-green-100 border-green-200 rounded border"></div>
                   <span className="text-gray-600">利用可能 (○)</span>
                 </div>
                 <div className="flex items-center gap-2">
