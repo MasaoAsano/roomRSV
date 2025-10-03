@@ -102,7 +102,7 @@ function App() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+            <div className="grid grid-cols-1 gap-6 max-w-md mx-auto">
               <div 
                 onClick={() => setCurrentState('search')}
                 className="bg-white p-8 rounded-lg shadow-md border border-gray-200 hover:shadow-lg cursor-pointer transition-shadow"
