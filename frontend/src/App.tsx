@@ -1,0 +1,248 @@
+import React, { useState, useEffect } from 'react';
+import SearchForm from './components/SearchForm';
+import RoomCard from './components/RoomCard';
+import BookingForm from './components/BookingForm';
+import { roomApi, bookingApi, healthApi } from './services/api';
+import { BookingRequest, RoomRecommendation, Booking, Equipment } from './types';
+import { Search, Calendar, CheckCircle, Menu } from 'lucide-react';
+
+type AppState = 'search' | 'results' | 'booking' | 'success';
+
+function App() {
+  const [currentState, setCurrentState] = useState<AppState>('search');
+  const [recommendations, setRecommendations] = useState<RoomRecommendation[]>([]);
+  const [currentRequest, setCurrentRequest] = useState<BookingRequest | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string>('');
+  const [successMessage, setSuccessMessage] = useState<string>('');
+
+  // APIヘルスチェック
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        await healthApi.checkHealth();
+        console.log('✅ API接続成功');
+      } catch (error) {
+        console.error('❌ API接続エラー:', error);
+      }
+    };
+    checkHealth();
+  }, []);
+
+  const handleSearch = async (request: BookingRequest) => {
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      console.log('🔍 検索開始:', request);
+      const results = await roomApi.recommendRooms(request);
+      console.log('📊 検索結果:', results);
+      setRecommendations(results);
+      setCurrentRequest(request);
+      setCurrentState('results');
+    } catch (error: any) {
+      console.error('❌ 検索エラー:', error);
+      setError(error.message || '検索に失敗しました');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBook = async (bookingData: {
+    roomId: string;
+    duration: number;
+    attendees: number;
+    requiredEquipment: Equipment;
+    purpose: string;
+    bookerName: string;
+    bookerEmail: string;
+  }) => {
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      console.log('📝 予約開始:', bookingData);
+      await bookingApi.createBooking(bookingData);
+      setSuccessMessage('予約が完了しました！');
+      setCurrentState('success');
+    } catch (error: any) {
+      console.error('❌ 予約エラー:', error);
+      setError(error.message || '予約に失敗しました');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBackToSearch = () => {
+    setCurrentState('search');
+    setRecommendations([]);
+    setCurrentRequest(null);
+    setError('');
+    setSuccessMessage('');
+  };
+
+  const handleBackToResults = () => {
+    setCurrentState('results');
+    setError('');
+    setSuccessMessage('');
+  };
+
+  const renderContent = () => {
+    switch (currentState) {
+      case 'search':
+        return (
+          <div className="space-y-6">
+            <div className="text-center">
+              <Search className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                会議室予約システム
+              </h1>
+              <p className="text-gray-600">
+                会議の要件を入力して、最適な会議室を見つけましょう
+              </p>
+            </div>
+            <SearchForm onSearch={handleSearch} isLoading={isLoading} />
+          </div>
+        );
+
+      case 'results':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">推奨会議室</h1>
+                <p className="text-gray-600 mt-1">
+                  あなたの要件に最適な会議室をご提案します
+                </p>
+              </div>
+              <button
+                onClick={handleBackToSearch}
+                className="flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
+              >
+                <Menu className="w-4 h-4 mr-2 rotate-180" />
+                検索に戻る
+              </button>
+            </div>
+
+            {recommendations.length > 0 ? (
+              <div className="space-y-4">
+                <div className="grid gap-4">
+                  {recommendations.map((recommendation) => (
+                    <RoomCard
+                      key={recommendation.room.id}
+                      room={recommendation.room}
+                      showScore={true}
+                      score={recommendation.score}
+                      reasons={recommendation.reasons}
+                      onClick={() => setCurrentState('booking')}
+                    />
+                  ))}
+                </div>
+                <div className="text center">
+                  <button
+                    onClick={() => setCurrentState('booking')}
+                    className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg font-medium"
+                  >
+                    🎯 予約を進める
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                  <p className="text-yellow-800 mb-4">
+                    条件に合う会議室が見つかりませんでした。
+                  </p>
+                  <button
+                    onClick={handleBackToSearch}
+                    className="text-blue-600 hover:text-blue-700 font-medium"
+                  >
+                    ← 検索条件を変更する
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+
+      case 'booking':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">📝 予約フォーム</h1>
+                <p className="text-gray-600 mt-1">
+                  会議室の予約を完了させてください
+                </p>
+              </div>
+              <button
+                onClick={handleBackToResults}
+                className="flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
+              >
+                <Menu className="w-4 h-4 mr-2 rotate-180" />
+                結果に戻る
+              </button>
+            </div>
+            <BookingForm
+              recommendations={recommendations}
+              onBook={handleBook}
+              isLoading={isLoading}
+              currentRequest={currentRequest}
+            />
+          </div>
+        );
+
+      case 'success':
+        return (
+          <div className="text-center py-8">
+            <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              🎉 予約完了！
+            </h1>
+            <p className="text-gray-600 mb-6 text-lg">{successMessage}</p>
+            <button
+              onClick={handleBackToSearch}
+              className="bg-green-600 text-white px-8 py-3 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 text-lg font-medium"
+            >
+              ✨ 新しい予約を行う
+            </button>
+          </div>
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          {error && (
+            <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <h3 className="text-sm font-medium text-red-800">
+                    エラーが発生しました
+                  </h3>
+                  <div className="mt-2 text-sm text-red-700">
+                    {error}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {renderContent()}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test</h1>
+    <button onclick="testRecommend()">Test API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testRecommend() {
+            const request = {
+                duration: 60,
+                attendees: 4,
+                requiredEquipment: {
+                    projector: true,
+                    tvConference: false,
+                    whiteboard: true
+                }
+            };
+
+            try {
+                console.log('Sending request:', request);
+                const response = await fetch('/api/rooms/recommend', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(request)
+                });
+
+                const data = await response.json();
+                console.log('Response:', data);
+                document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
