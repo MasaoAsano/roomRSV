@@ -144,7 +144,7 @@ function App() {
                 会議の要件を入力して、最適な会議室を見つけましょう
               </p>
             </div>
-            <SearchForm onSearch={handleSearch} isLoading={isLoading} />
+            <SearchForm onSearch={handleSearch} isLoading={isLoading} initialRequest={currentBookingRequest} />
           </div>
         );
 

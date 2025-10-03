@@ -4,16 +4,36 @@ import { BookingRequest, Equipment } from '../types';
 interface SearchFormProps {
   onSearch: (request: BookingRequest) => void;
   isLoading?: boolean;
+  initialRequest?: BookingRequest | null;
 }
 
-const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false }) => {
-  const [duration, setDuration] = useState<number>(60);
-  const [attendees, setAttendees] = useState<number>(4);
-  const [requiredEquipment, setRequiredEquipment] = useState<Equipment>({
-    projector: false,
-    tvConference: false,
-    whiteboard: false
-  });
+const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, initialRequest }) => {
+  const [duration, setDuration] = useState<number>(initialRequest?.duration || 60);
+  const [attendees, setAttendees] = useState<number>(initialRequest?.attendees || 4);
+  const [selectedDate, setSelectedDate] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState<string>('09:00');
+  const [requiredEquipment, setRequiredEquipment] = useState<Equipment>(
+    initialRequest?.requiredEquipment || {
+      projector: false,
+      tvConference: false,
+      whiteboard: false
+    }
+  );
+
+  // 初期化時に日付を設定
+  React.useEffect(() => {
+    if (initialRequest?.startTime) {
+      const date = new Date(initialRequest.startTime);
+      setSelectedDate(date.toISOString().split('T')[0]);
+      setSelectedTime(
+        `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
+      );
+    } else {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      setSelectedDate(tomorrow.toISOString().split('T')[0]);
+    }
+  }, [initialRequest]);
 
   const handleEquipmentChange = (equipment: keyof Equipment) => {
     setRequiredEquipment(prev => ({
@@ -25,11 +45,14 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false }) 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // 日付と時間を組み合わせてstartTimeを作成
+    const startDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
+    
     const request: BookingRequest = {
       duration,
       attendees,
-      requiredEquipment
-      // startTimeは削除（バックエンドで現在時刻をデフォルトとして使用）
+      requiredEquipment,
+      startTime: startDateTime
     };
 
     onSearch(request);
@@ -85,6 +108,52 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false }) 
           <p className="text-sm text-gray-500 mt-1">
             1〜20名で入力してください
           </p>
+        </div>
+
+        {/* 希望日時 */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="selectedDate" className="block text-sm font-medium text-gray-700 mb-2">
+              希望日
+            </label>
+            <input
+              type="date"
+              id="selectedDate"
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+              min={new Date().toISOString().split('T')[0]}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <p className="text-sm text-gray-500 mt-1">
+              本日以降の日付を選択してください
+            </p>
+          </div>
+          
+          <div>
+            <label htmlFor="selectedTime" className="block text-sm font-medium text-gray-700 mb-2">
+              開始時間
+            </label>
+            <select
+              id="selectedTime"
+              value={selectedTime}
+              onChange={(e) => setSelectedTime(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              {Array.from({ length: 37 }, (_, i) => {
+                const hour = Math.floor(i / 4) + 9;
+                const minute = (i % 4) * 15;
+                const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+                return (
+                  <option key={timeStr} value={timeStr}>
+                    {timeStr}
+                  </option>
+                );
+              })}
+            </select>
+            <p className="text-sm text-gray-500 mt-1">
+              9:00〜18:00の15分間隔
+            </p>
+          </div>
         </div>
 
         {/* 必要な設備 */}

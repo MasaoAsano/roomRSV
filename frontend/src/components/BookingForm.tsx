@@ -87,6 +87,15 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <div className="text-sm text-blue-800 space-y-1">
               <p>• 所要時間: {currentRequest.duration}分</p>
               <p>• 参加人数: {currentRequest.attendees}名</p>
+              {currentRequest.startTime && (
+                <p>• 希望日時: {new Date(currentRequest.startTime).toLocaleString('ja-JP', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}</p>
+              )}
               <div className="flex items-center gap-2">
                 <span>• 必要な設備:</span>
                 {currentRequest.requiredEquipment.projector && <span className="bg-blue-100 px-2 py-1 rounded text-xs">プロジェクター</span>}
