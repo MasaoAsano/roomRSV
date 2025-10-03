@@ -81,7 +81,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
             id="duration"
             value={duration}
             onChange={(e) => setDuration(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           >
             {durationOptions.map(option => (
               <option key={option.value} value={option.value}>
@@ -103,7 +103,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
             max="20"
             value={attendees}
             onChange={(e) => setAttendees(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
           />
           <p className="text-sm text-gray-500 mt-1">
             1〜20名で入力してください
@@ -122,7 +122,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             />
             <p className="text-sm text-gray-500 mt-1">
               本日以降の日付を選択してください
@@ -137,7 +137,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
               id="selectedTime"
               value={selectedTime}
               onChange={(e) => setSelectedTime(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
               {Array.from({ length: 37 }, (_, i) => {
                 const hour = Math.floor(i / 4) + 9;
@@ -203,7 +203,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
             className={`w-full py-2 px-4 rounded-md font-medium ${
               isLoading
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                : 'bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
             }`}
           >
             {isLoading ? '検索中...' : '最適な会議室を検索'}

@@ -94,10 +94,10 @@ function App() {
         return (
           <div className="text-center py-12">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-4xl font-bold text-red-900 mb-4">
                 会議室予約システム
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
+              <p className="text-xl text-red-700 mb-8">
                 最適な会議室を簡単に見つけて予約
               </p>
             </div>
@@ -105,26 +105,26 @@ function App() {
             <div className="grid grid-cols-1 gap-6 max-w-md mx-auto">
               <div 
                 onClick={() => setCurrentState('search')}
-                className="bg-white p-8 rounded-lg shadow-md border border-gray-200 hover:shadow-lg cursor-pointer transition-shadow"
+                className="bg-white p-8 rounded-lg shadow-md border border-red-200 hover:shadow-lg hover:border-red-300 cursor-pointer transition-all"
               >
                 <div className="flex items-center justify-center mb-4">
-                  <Search className="w-12 h-12 text-blue-600" />
+                  <Search className="w-12 h-12 text-red-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">会議室を予約</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold text-red-900 mb-2">会議室を予約</h3>
+                <p className="text-red-600">
                   条件に合う最適な会議室を検索して予約できます
                 </p>
               </div>
 
               <div 
                 onClick={() => setCurrentState('calendar')}
-                className="bg-white p-8 rounded-lg shadow-md border border-gray-200 hover:shadow-lg cursor-pointer transition-shadow"
+                className="bg-white p-8 rounded-lg shadow-md border border-red-200 hover:shadow-lg hover:border-red-300 cursor-pointer transition-all"
               >
                 <div className="flex items-center justify-center mb-4">
-                  <Calendar className="w-12 h-12 text-green-600" />
+                  <Calendar className="w-12 h-12 text-red-700" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">予約状況確認</h3>
-                <p className="text-gray-600">
+                <h3 className="text-xl font-semibold text-red-900 mb-2">予約状況確認</h3>
+                <p className="text-red-600">
                   会議室の1週間の予約状況をカレンダーで確認できます
                 </p>
               </div>
@@ -136,11 +136,11 @@ function App() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <Search className="w-12 h-12 text-blue-600 mx-auto mb-4" />
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                会議室予約システム
+              <Search className="w-12 h-12 text-red-600 mx-auto mb-4" />
+              <h1 className="text-3xl font-bold text-red-900 mb-2">
+            会議室予約システム
               </h1>
-              <p className="text-gray-600">
+              <p className="text-red-700">
                 会議の要件を入力して、最適な会議室を見つけましょう
               </p>
             </div>
@@ -153,14 +153,14 @@ function App() {
           <div className="space-y-6">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">推奨会議室</h1>
-                <p className="text-gray-600 mt-1">
+                <h1 className="text-2xl font-bold text-red-900">推奨会議室</h1>
+                <p className="text-red-700 mt-1">
                   あなたの要件に最適な会議室をご提案します
                 </p>
               </div>
               <button
                 onClick={handleBackToSearch}
-                className="flex items-center px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
+                className="flex items-center px-4 py-2 text-red-600 hover:text-red-700 font-medium"
               >
                 <Menu className="w-4 h-4 mr-2 rotate-180" />
                 検索に戻る
@@ -184,7 +184,7 @@ function App() {
                 <div className="text center">
                   <button
                     onClick={() => setCurrentState('booking')}
-                    className="bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg font-medium"
+                    className="bg-red-600 text-white px-8 py-3 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 text-lg font-medium"
                   >
                     🎯 予約を進める
                   </button>
@@ -198,7 +198,7 @@ function App() {
                   </p>
                   <button
                     onClick={handleBackToSearch}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-red-600 hover:text-red-700 font-medium"
                   >
                     ← 検索条件を変更する
                   </button>
@@ -265,22 +265,22 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-red-50">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {error && (
-            <div className="mb-6 bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="mb-6 bg-red-100 border border-red-300 rounded-md p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">
+                  <h3 className="text-sm font-medium text-red-900">
                     エラーが発生しました
                   </h3>
-                  <div className="mt-2 text-sm text-red-700">
+                  <div className="mt-2 text-sm text-red-800">
                     {error}
                   </div>
                 </div>

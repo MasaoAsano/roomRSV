@@ -94,7 +94,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
       </div>
     );
   }
@@ -104,19 +104,19 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
       <div className="mb-6">
         <button 
           onClick={onBack}
-          className="flex items-center text-blue-600 hover:text-blue-800 mb-4"
+          className="flex items-center text-red-600 hover:text-red-800 mb-4"
         >
           <ChevronLeft className="mr-1" size={20} />
           戻る
         </button>
         
         <div className="flex items-center gap-6 mb-6">
-          <Calendar className="text-blue-600" size={32} />
-          <h1 className="text-3xl font-bold text-gray-900">予約状況カレンダー</h1>
+          <Calendar className="text-red-600" size={32} />
+          <h1 className="text-3xl font-bold text-red-900">予約状況カレンダー</h1>
         </div>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+          <div className="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded mb-6">
             {error}
           </div>
         )}
@@ -130,7 +130,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
             <select
               value={selectedRoomId}
               onChange={(e) => setSelectedRoomId(e.target.value)}
-              className="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="rounded-md border-gray-300 shadow-sm focus:border-red-500 focus:ring-red-500"
             >
               {rooms.map((room) => (
                 <option key={room.id} value={room.id}>
@@ -144,18 +144,18 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
           <div className="flex items-center gap-4">
             <button
               onClick={getPreviousWeek}
-              className="p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+              className="p-2 rounded-md bg-red-100 hover:bg-red-200"
             >
               <ChevronLeft size={20} />
             </button>
             
-            <span className="font-semibold text-gray-700 min-w-48 text-center">
+            <span className="font-semibold text-red-700 min-w-48 text-center">
               {calendarData ? `${calendarData.weekStartDate} - ${calendarData.weekEndDate}` : ''}
             </span>
             
             <button
               onClick={getNextWeek}
-              className="p-2 rounded-md bg-gray-100 hover:bg-gray-200"
+              className="p-2 rounded-md bg-red-100 hover:bg-red-200"
             >
               <ChevronRight size={20} />
             </button>

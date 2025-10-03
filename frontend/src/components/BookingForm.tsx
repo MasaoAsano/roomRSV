@@ -149,7 +149,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             value={purpose}
             onChange={(e) => setPurpose(e.target.value)}
             rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             placeholder="例: プロジェクト進捗会議、クライアント打ち合わせ、チームミーティングなど"
             required
           />
@@ -165,7 +165,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             id="bookerName"
             value={bookerName}
             onChange={(e) => setBookerName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             placeholder="山田 太郎"
             required
           />
@@ -181,7 +181,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             id="bookerEmail"
             value={bookerEmail}
             onChange={(e) => setBookerEmail(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             placeholder="yamada@company.com"
             required
           />
@@ -195,7 +195,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             className={`w-full py-2 px-4 rounded-md font-medium ${
               isLoading || !selectedRoomId
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+                : 'bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
             }`}
           >
             {isLoading ? '予約中...' : '予約を確定する'}
