@@ -1,5 +1,5 @@
 import { getDatabase } from '../database';
-import { Booking, BookingRequest } from '../types';
+import { Booking, BookingRequest, CalendarData, CalendarDay, CalendarSlot } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 export class BookingService {
@@ -184,5 +184,96 @@ export class BookingService {
     if (duration % 15 !== 0) {
       throw new Error('予約時間は15分単位で設定してください');
     }
+  }
+
+  // カレンダー表示用のデータ取得
+  async getCalendarData(roomId: string, startDate: Date): Promise<CalendarData> {
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 6); // 1週間後
+
+    // 会議室情報を取得
+    const room = await new Promise<any>((resolve, reject) => {
+      this.db.get('SELECT * FROM meeting_rooms WHERE id = ?', [roomId], (err, row) => {
+        if (err) reject(err);
+        else resolve(row);
+      });
+    });
+
+    if (!room) {
+      throw new Error('会議室が見つかりません');
+    }
+
+    // 予約データを取得
+    const bookings = await this.getBookingsByRoom(roomId, startDate, endDate);
+    
+    // 週の各日のデータを生成
+    const days: CalendarDay[] = [];
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+    
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + i);
+      
+      const dateStr = currentDate.toISOString().split('T')[0];
+      const dayOfWeek = dayNames[currentDate.getDay()];
+      
+      // 15分間隔の時間スロット生成（9:00-18:00）
+      const slots: CalendarSlot[] = [];
+      for (let hour = 9; hour < 18; hour++) {
+        for (let minute = 0; minute < 60; minute += 15) {
+          const timeSlot = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+          
+          // この時間帯の予約があるかチェック
+          const booking = this.findBookingForTimeSlot(bookings, dateStr, timeSlot);
+          
+          slots.push({
+            timeSlot,
+            isBooked: !!booking,
+            bookingId: booking?.id,
+            bookerName: booking?.bookerName,
+            purpose: booking?.purpose
+          });
+        }
+      }
+      
+      days.push({
+        date: dateStr,
+        dayOfWeek,
+        slots
+      });
+    }
+
+    return {
+      room: {
+        id: room.id,
+        name: room.name,
+        capacity: room.capacity,
+        equipment: {
+          projector: !!room.projector,
+          tvConference: !!room.tv_conference,
+          whiteboard: !!room.whiteboard
+        },
+        location: room.location,
+        floor: room.floor
+      },
+      weekStartDate: startDate.toISOString().split('T')[0],
+      weekEndDate: endDate.toISOString().split('T')[0],
+      days
+    };
+  }
+
+  private findBookingForTimeSlot(bookings: Booking[], date: string, timeSlot: string): Booking | undefined {
+    const slotTime = new Date(`${date}T${timeSlot}:00.000Z`);
+    const slotEndTime = new Date(slotTime.getTime() + 15 * 60000); // 15分後
+    
+    return bookings.find(booking => {
+      const startTime = new Date(booking.startTime);
+      const endTime = new Date(booking.endTime);
+      
+      // 予約時間がこのスロットと重複しているかチェック
+      return (slotTime >= startTime && slotTime < endTime) ||
+             (slotEndTime > startTime && slotEndTime <= endTime) ||
+             (slotTime <= startTime && slotEndTime >= endTime);
+    });
   }
 }

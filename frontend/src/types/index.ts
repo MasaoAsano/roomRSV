@@ -48,3 +48,25 @@ export interface ApiResponse<T> {
   data?: T;
   error?: string;
 }
+
+// カレンダー表示用の型
+export interface CalendarSlot {
+  timeSlot: string; // "09:00" or "09:15" などの時間スロット
+  isBooked: boolean; // 予約済みかどうか
+  bookingId?: string; // 予約ID（予約済みの場合）
+  bookerName?: string; // 予約者名
+  purpose?: string; // 会議目的
+}
+
+export interface CalendarDay {
+  date: string; // "2025-10-03"
+  dayOfWeek: string; // "月", "火", etc.
+  slots: CalendarSlot[];
+}
+
+export interface CalendarData {
+  room: MeetingRoom;
+  weekStartDate: string; // "2025-10-03"
+  weekEndDate: string; // "2025-10-09"
+  days: CalendarDay[];
+}

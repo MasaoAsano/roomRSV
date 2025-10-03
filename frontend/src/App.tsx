@@ -2,14 +2,15 @@ import React, { useState, useEffect } from 'react';
 import SearchForm from './components/SearchForm';
 import RoomCard from './components/RoomCard';
 import BookingForm from './components/BookingForm';
+import CalendarView from './components/CalendarView';
 import { roomApi, bookingApi, healthApi } from './services/api';
 import { BookingRequest, RoomRecommendation, Booking, Equipment } from './types';
 import { Search, Calendar, CheckCircle, Menu } from 'lucide-react';
 
-type AppState = 'search' | 'results' | 'booking' | 'success';
+type AppState = 'home' | 'search' | 'results' | 'booking' | 'success' | 'calendar';
 
 function App() {
-  const [currentState, setCurrentState] = useState<AppState>('search');
+  const [currentState, setCurrentState] = useState<AppState>('home');
   const [recommendations, setRecommendations] = useState<RoomRecommendation[]>([]);
   const [currentRequest, setCurrentRequest] = useState<BookingRequest | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -89,6 +90,48 @@ function App() {
 
   const renderContent = () => {
     switch (currentState) {
+      case 'home':
+        return (
+          <div className="text-center py-12">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold text-gray-900 mb-4">
+                会議室予約システム
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                最適な会議室を簡単に見つけて予約
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6 max-w-3xl mx-auto">
+              <div 
+                onClick={() => setCurrentState('search')}
+                className="bg-white p-8 rounded-lg shadow-md border border-gray-200 hover:shadow-lg cursor-pointer transition-shadow"
+              >
+                <div className="flex items-center justify-center mb-4">
+                  <Search className="w-12 h-12 text-blue-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">会議室を予約</h3>
+                <p className="text-gray-600">
+                  条件に合う最適な会議室を検索して予約できます
+                </p>
+              </div>
+
+              <div 
+                onClick={() => setCurrentState('calendar')}
+                className="bg-white p-8 rounded-lg shadow-md border border-gray-200 hover:shadow-lg cursor-pointer transition-shadow"
+              >
+                <div className="flex items-center justify-center mb-4">
+                  <Calendar className="w-12 h-12 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">予約状況確認</h3>
+                <p className="text-gray-600">
+                  会議室の1週間の予約状況をカレンダーで確認できます
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
       case 'search':
         return (
           <div className="space-y-6">
@@ -207,6 +250,13 @@ function App() {
               ✨ 新しい予約を行う
             </button>
           </div>
+        );
+
+      case 'calendar':
+        return (
+          <CalendarView 
+            onBack={() => setCurrentState('home')} 
+          />
         );
 
       default:

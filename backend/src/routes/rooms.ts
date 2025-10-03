@@ -113,4 +113,26 @@ router.post('/recommend', async (req, res) => {
   }
 });
 
+// 会議室のカレンダーデータ取得
+router.get('/:id/calendar', async (req, res) => {
+  try {
+    const { startDate } = req.query;
+    const start = startDate ? new Date(startDate as string) : new Date();
+    
+    const calendarData = await bookingService.getCalendarData(req.params.id, start);
+    const response: ApiResponse<typeof calendarData> = {
+      success: true,
+      data: calendarData
+    };
+    res.json(response);
+  } catch (error: any) {
+    console.error('Error in calendar endpoint:', error);
+    const response: ApiResponse<null> = {
+      success: false,
+      error: `カレンダーデータの取得に失敗しました: ${error.message}`
+    };
+    res.status(500).json(response);
+  }
+});
+
 export default router;
