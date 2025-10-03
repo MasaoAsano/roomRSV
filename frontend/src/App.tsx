@@ -135,6 +135,14 @@ function App() {
       case 'search':
         return (
           <div className="space-y-6">
+            <button 
+              onClick={() => setCurrentState('home')}
+              className="flex items-center text-red-600 hover:text-red-800 mb-4"
+            >
+              <Menu className="mr-1 rotate-180" size={20} />
+              戻る
+            </button>
+            
             <div className="text-center">
               <Search className="w-12 h-12 text-red-600 mx-auto mb-4" />
               <h1 className="text-3xl font-bold text-red-900 mb-2">
