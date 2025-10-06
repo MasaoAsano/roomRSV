@@ -1,0 +1,44 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景のグラデーション -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#991b1b;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fef2f2;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- 背景の円 -->
+  <circle cx="16" cy="16" r="15" fill="url(#bgGradient)" stroke="#ffffff" stroke-width="1"/>
+  
+  <!-- メインの会議室アイコン -->
+  <rect x="8" y="10" width="16" height="12" rx="2" fill="url(#iconGradient)" stroke="#dc2626" stroke-width="0.5"/>
+  
+  <!-- 会議テーブル -->
+  <rect x="10" y="14" width="12" height="6" rx="1" fill="#dc2626" opacity="0.3"/>
+  
+  <!-- 椅子（4つ） -->
+  <circle cx="10" cy="12" r="1.5" fill="url(#iconGradient)" stroke="#dc2626" stroke-width="0.5"/>
+  <circle cx="22" cy="12" r="1.5" fill="url(#iconGradient)" stroke="#dc2626" stroke-width="0.5"/>
+  <circle cx="10" cy="20" r="1.5" fill="url(#iconGradient)" stroke="#dc2626" stroke-width="0.5"/>
+  <circle cx="22" cy="20" r="1.5" fill="url(#iconGradient)" stroke="#dc2626" stroke-width="0.5"/>
+  
+  <!-- 創造的なアイデアを表現する星 -->
+  <g transform="translate(24, 6)">
+    <path d="M2 0L2.5 1.5L4 2L2.5 2.5L2 4L1.5 2.5L0 2L1.5 1.5Z" fill="#fbbf24" stroke="#f59e0b" stroke-width="0.3"/>
+  </g>
+  
+  <!-- ディスカッションを表現する吹き出し -->
+  <g transform="translate(2, 6)">
+    <ellipse cx="2" cy="1.5" rx="2" ry="1.5" fill="#3b82f6" opacity="0.8"/>
+    <path d="M0.5 1.5L1.5 3L2.5 1.5" fill="#3b82f6" opacity="0.8"/>
+  </g>
+  
+  <!-- チェックマーク（完了を表現） -->
+  <g transform="translate(26, 24)">
+    <path d="M1 2L2.5 3.5L5 1" stroke="#10b981" stroke-width="1" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
