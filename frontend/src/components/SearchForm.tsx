@@ -186,7 +186,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
               onChange={(e) => setSelectedTime(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
             >
-              {Array.from({ length: 37 }, (_, i) => {
+              {Array.from({ length: 60 }, (_, i) => {
                 const hour = Math.floor(i / 4) + 9;
                 const minute = (i % 4) * 15;
                 const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
@@ -198,7 +198,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
               })}
             </select>
             <p className="text-sm text-gray-500 mt-1">
-              9:00〜18:00の15分間隔
+              9:00〜23:45の15分間隔
             </p>
           </div>
         </div>
