@@ -5,7 +5,7 @@ import BookingForm from './components/BookingForm';
 import CalendarView from './components/CalendarView';
 import { roomApi, bookingApi, healthApi } from './services/api';
 import { BookingRequest, RoomRecommendation, Booking, Equipment } from './types';
-import { Search, Calendar, CheckCircle, Menu } from 'lucide-react';
+import { Search, Calendar, CheckCircle, Menu, ChevronLeft } from 'lucide-react';
 
 type AppState = 'home' | 'search' | 'results' | 'booking' | 'success' | 'calendar';
 
@@ -140,7 +140,7 @@ function App() {
                 onClick={() => setCurrentState('home')}
                 className="flex items-center text-red-600 hover:text-red-800 mb-4"
               >
-                <Menu className="mr-1 rotate-180" size={20} />
+                <ChevronLeft className="mr-1" size={20} />
                 戻る
               </button>
               
