@@ -8,6 +8,8 @@ interface BookingFormProps {
     duration: number;
     attendees: number;
     requiredEquipment: Equipment;
+    startTime?: Date | string;
+    endTime?: Date | string;
     purpose: string;
     bookerName: string;
     bookerEmail: string;
@@ -67,6 +69,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
       duration: currentRequest.duration,
       attendees: currentRequest.attendees,
       requiredEquipment: currentRequest.requiredEquipment,
+      startTime: currentRequest.startTime,
+      endTime: currentRequest.endTime,
       purpose: purpose.trim(),
       bookerName: bookerName.trim(),
       bookerEmail: bookerEmail.trim()

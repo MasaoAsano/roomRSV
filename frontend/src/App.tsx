@@ -54,6 +54,8 @@ function App() {
     duration: number;
     attendees: number;
     requiredEquipment: Equipment;
+    startTime?: Date | string;
+    endTime?: Date | string;
     purpose: string;
     bookerName: string;
     bookerEmail: string;
