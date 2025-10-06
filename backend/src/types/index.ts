@@ -21,8 +21,8 @@ export interface BookingRequest {
   duration: number; // 所要時間（分）
   attendees: number; // 参加人数
   requiredEquipment: Equipment; // 必要な設備
-  startTime?: Date; // 希望開始時間（オプション）
-  endTime?: Date; // 希望終了時間（オプション）
+  startTime?: Date | string; // 希望開始時間（オプション）
+  endTime?: Date | string; // 希望終了時間（オプション）
 }
 
 export interface Booking {

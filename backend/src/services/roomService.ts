@@ -90,8 +90,8 @@ export class RoomService {
   async recommendRooms(request: BookingRequest): Promise<RoomRecommendation[]> {
     try {
       // startTimeが指定されていない場合は、現在時刻から1時間後をデフォルトとする
-      const startTime = request.startTime || new Date();
-      const endTime = request.endTime || new Date(startTime.getTime() + request.duration * 60000);
+      const startTime = request.startTime ? new Date(request.startTime) : new Date();
+      const endTime = request.endTime ? new Date(request.endTime) : new Date(startTime.getTime() + request.duration * 60000);
       
       console.log('Recommend request:', {
         startTime: startTime.toISOString(),

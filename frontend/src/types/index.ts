@@ -21,8 +21,8 @@ export interface BookingRequest {
   duration: number;
   attendees: number;
   requiredEquipment: Equipment;
-  startTime?: Date;
-  endTime?: Date;
+  startTime?: Date | string;
+  endTime?: Date | string;
 }
 
 export interface Booking {
