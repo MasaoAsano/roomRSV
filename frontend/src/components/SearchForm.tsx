@@ -22,8 +22,14 @@ const getInitialDateTime = () => {
     now.setHours(9, 0, 0, 0);
   }
   
+  // 日本時間で日付を取得（タイムゾーンずれを回避）
+  const year = now.getFullYear();
+  const month = (now.getMonth() + 1).toString().padStart(2, '0');
+  const day = now.getDate().toString().padStart(2, '0');
+  const date = `${year}-${month}-${day}`;
+  
   return {
-    date: now.toISOString().split('T')[0],
+    date,
     time: `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
   };
 };
