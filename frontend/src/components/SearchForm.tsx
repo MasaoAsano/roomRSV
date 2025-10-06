@@ -10,16 +10,19 @@ interface SearchFormProps {
 // 現在日時を取得して初期値を設定する関数
 const getInitialDateTime = () => {
   const now = new Date();
+  console.log('🔍 getInitialDateTime - 現在時刻:', now.toLocaleString('ja-JP'));
   
   // 現在時刻を15分間隔に丸める
   const minutes = now.getMinutes();
   const roundedMinutes = Math.ceil(minutes / 15) * 15;
   now.setMinutes(roundedMinutes);
+  console.log('🔍 15分刻みに丸めた時刻:', now.toLocaleString('ja-JP'));
   
   // 時間が18:00を超える場合は翌日の9:00に設定
   if (now.getHours() >= 18) {
     now.setDate(now.getDate() + 1);
     now.setHours(9, 0, 0, 0);
+    console.log('🔍 18:00以降のため翌日9:00に設定:', now.toLocaleString('ja-JP'));
   }
   
   // 日本時間で日付を取得（タイムゾーンずれを回避）
@@ -27,10 +30,13 @@ const getInitialDateTime = () => {
   const month = (now.getMonth() + 1).toString().padStart(2, '0');
   const day = now.getDate().toString().padStart(2, '0');
   const date = `${year}-${month}-${day}`;
+  const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  
+  console.log('🔍 最終的な日時設定:', { date, time });
   
   return {
     date,
-    time: `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+    time
   };
 };
 
@@ -40,19 +46,28 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
   
   // 初期日時の設定
   const initialDateTime = getInitialDateTime();
+  console.log('🔍 initialRequest:', initialRequest);
+  console.log('🔍 initialDateTime:', initialDateTime);
+  
   const [selectedDate, setSelectedDate] = useState<string>(() => {
     if (initialRequest?.startTime) {
       const date = new Date(initialRequest.startTime);
-      return date.toISOString().split('T')[0];
+      const result = date.toISOString().split('T')[0];
+      console.log('🔍 selectedDate (initialRequest使用):', result);
+      return result;
     }
+    console.log('🔍 selectedDate (現在日時使用):', initialDateTime.date);
     return initialDateTime.date;
   });
   
   const [selectedTime, setSelectedTime] = useState<string>(() => {
     if (initialRequest?.startTime) {
       const date = new Date(initialRequest.startTime);
-      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+      const result = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+      console.log('🔍 selectedTime (initialRequest使用):', result);
+      return result;
     }
+    console.log('🔍 selectedTime (現在日時使用):', initialDateTime.time);
     return initialDateTime.time;
   });
   const [requiredEquipment, setRequiredEquipment] = useState<Equipment>(
