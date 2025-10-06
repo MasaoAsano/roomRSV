@@ -7,35 +7,35 @@ interface SearchFormProps {
   initialRequest?: BookingRequest | null;
 }
 
-// 現在日時を取得して初期値を設定する関数
-const getInitialDateTime = () => {
-  const now = new Date();
-  console.log('🔍 getInitialDateTime - 現在時刻:', now.toLocaleString('ja-JP'));
-  
-  // 現在時刻を15分間隔に丸める
-  const minutes = now.getMinutes();
-  const roundedMinutes = Math.ceil(minutes / 15) * 15;
-  now.setMinutes(roundedMinutes);
-  console.log('🔍 15分刻みに丸めた時刻:', now.toLocaleString('ja-JP'));
-  
-  // 日本時間で日付を取得（タイムゾーンずれを回避）
-  const year = now.getFullYear();
-  const month = (now.getMonth() + 1).toString().padStart(2, '0');
-  const day = now.getDate().toString().padStart(2, '0');
-  const date = `${year}-${month}-${day}`;
-  const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-  
-  console.log('🔍 最終的な日時設定:', { date, time });
-  
-  return {
-    date,
-    time
-  };
-};
-
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, initialRequest }) => {
   const [duration, setDuration] = useState<number>(initialRequest?.duration || 60);
   const [attendees, setAttendees] = useState<number>(initialRequest?.attendees || 4);
+  
+  // 現在日時を取得して初期値を設定する関数
+  const getInitialDateTime = () => {
+    const now = new Date();
+    console.log('🔍 getInitialDateTime - 現在時刻:', now.toLocaleString('ja-JP'));
+    
+    // 現在時刻を15分間隔に丸める
+    const minutes = now.getMinutes();
+    const roundedMinutes = Math.ceil(minutes / 15) * 15;
+    now.setMinutes(roundedMinutes);
+    console.log('🔍 15分刻みに丸めた時刻:', now.toLocaleString('ja-JP'));
+    
+    // 日本時間で日付を取得（タイムゾーンずれを回避）
+    const year = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const day = now.getDate().toString().padStart(2, '0');
+    const date = `${year}-${month}-${day}`;
+    const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    console.log('🔍 最終的な日時設定:', { date, time });
+    
+    return {
+      date,
+      time
+    };
+  };
   
   // 初期日時の設定
   const initialDateTime = getInitialDateTime();
