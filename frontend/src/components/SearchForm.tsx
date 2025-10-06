@@ -7,11 +7,48 @@ interface SearchFormProps {
   initialRequest?: BookingRequest | null;
 }
 
+// 現在日時を取得して初期値を設定する関数
+const getInitialDateTime = () => {
+  const now = new Date();
+  
+  // 現在時刻を15分間隔に丸める
+  const minutes = now.getMinutes();
+  const roundedMinutes = Math.ceil(minutes / 15) * 15;
+  now.setMinutes(roundedMinutes);
+  
+  // 時間が18:00を超える場合は翌日の9:00に設定
+  if (now.getHours() >= 18) {
+    now.setDate(now.getDate() + 1);
+    now.setHours(9, 0, 0, 0);
+  }
+  
+  return {
+    date: now.toISOString().split('T')[0],
+    time: `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+  };
+};
+
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, initialRequest }) => {
   const [duration, setDuration] = useState<number>(initialRequest?.duration || 60);
   const [attendees, setAttendees] = useState<number>(initialRequest?.attendees || 4);
-  const [selectedDate, setSelectedDate] = useState<string>('');
-  const [selectedTime, setSelectedTime] = useState<string>('09:00');
+  
+  // 初期日時の設定
+  const initialDateTime = getInitialDateTime();
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    if (initialRequest?.startTime) {
+      const date = new Date(initialRequest.startTime);
+      return date.toISOString().split('T')[0];
+    }
+    return initialDateTime.date;
+  });
+  
+  const [selectedTime, setSelectedTime] = useState<string>(() => {
+    if (initialRequest?.startTime) {
+      const date = new Date(initialRequest.startTime);
+      return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+    }
+    return initialDateTime.time;
+  });
   const [requiredEquipment, setRequiredEquipment] = useState<Equipment>(
     initialRequest?.requiredEquipment || {
       projector: false,
@@ -20,32 +57,13 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
     }
   );
 
-  // 初期化時に現在の日時を設定
+  // initialRequestが変更された場合のみ日時を更新
   React.useEffect(() => {
     if (initialRequest?.startTime) {
       const date = new Date(initialRequest.startTime);
       setSelectedDate(date.toISOString().split('T')[0]);
       setSelectedTime(
         `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
-      );
-    } else {
-      // 現在の日時を取得
-      const now = new Date();
-      
-      // 現在時刻を15分間隔に丸める
-      const minutes = now.getMinutes();
-      const roundedMinutes = Math.ceil(minutes / 15) * 15;
-      now.setMinutes(roundedMinutes);
-      
-      // 時間が18:00を超える場合は翌日の9:00に設定
-      if (now.getHours() >= 18) {
-        now.setDate(now.getDate() + 1);
-        now.setHours(9, 0, 0, 0);
-      }
-      
-      setSelectedDate(now.toISOString().split('T')[0]);
-      setSelectedTime(
-        `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
       );
     }
   }, [initialRequest]);
