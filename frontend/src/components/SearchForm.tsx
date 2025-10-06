@@ -20,7 +20,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
     }
   );
 
-  // 初期化時に日付を設定
+  // 初期化時に現在の日時を設定
   React.useEffect(() => {
     if (initialRequest?.startTime) {
       const date = new Date(initialRequest.startTime);
@@ -29,9 +29,24 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
         `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`
       );
     } else {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      setSelectedDate(tomorrow.toISOString().split('T')[0]);
+      // 現在の日時を取得
+      const now = new Date();
+      
+      // 現在時刻を15分間隔に丸める
+      const minutes = now.getMinutes();
+      const roundedMinutes = Math.ceil(minutes / 15) * 15;
+      now.setMinutes(roundedMinutes);
+      
+      // 時間が18:00を超える場合は翌日の9:00に設定
+      if (now.getHours() >= 18) {
+        now.setDate(now.getDate() + 1);
+        now.setHours(9, 0, 0, 0);
+      }
+      
+      setSelectedDate(now.toISOString().split('T')[0]);
+      setSelectedTime(
+        `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+      );
     }
   }, [initialRequest]);
 
