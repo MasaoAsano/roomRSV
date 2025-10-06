@@ -71,6 +71,73 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
     }
   );
 
+  // 時間調整関数（15分刻み）
+  const adjustTime = (minutes: number) => {
+    const [hours, mins] = selectedTime.split(':').map(Number);
+    const totalMinutes = hours * 60 + mins + minutes;
+    
+    // 範囲制限（9:00〜23:45）
+    const minMinutes = 9 * 60; // 9:00
+    const maxMinutes = 23 * 60 + 45; // 23:45
+    
+    let adjustedMinutes = Math.max(minMinutes, Math.min(maxMinutes, totalMinutes));
+    
+    // 15分刻みに調整
+    adjustedMinutes = Math.round(adjustedMinutes / 15) * 15;
+    
+    const newHours = Math.floor(adjustedMinutes / 60);
+    const newMins = adjustedMinutes % 60;
+    
+    const newTime = `${newHours.toString().padStart(2, '0')}:${newMins.toString().padStart(2, '0')}`;
+    setSelectedTime(newTime);
+  };
+
+  // 時間入力のリアルタイム処理
+  const handleTimeInput = (value: string) => {
+    // 数字とコロンのみ許可
+    const sanitized = value.replace(/[^0-9:]/g, '');
+    
+    // 長さ制限
+    if (sanitized.length <= 5) {
+      setSelectedTime(sanitized);
+    }
+  };
+
+  // 時間バリデーションと設定
+  const validateAndSetTime = (value: string) => {
+    const timeRegex = /^([0-1]?[0-9]|2[0-3]):([0-5][0-9])$/;
+    
+    if (!timeRegex.test(value)) {
+      // 無効な形式の場合は前回の有効な値に戻す
+      return;
+    }
+    
+    const [hours, minutes] = value.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes;
+    
+    // 範囲チェック（9:00〜23:45）
+    const minMinutes = 9 * 60; // 9:00
+    const maxMinutes = 23 * 60 + 45; // 23:45
+    
+    if (totalMinutes < minMinutes || totalMinutes > maxMinutes) {
+      // 範囲外の場合は前回の有効な値に戻す
+      return;
+    }
+    
+    // 15分刻みチェック
+    if (minutes % 15 !== 0) {
+      // 15分刻みでない場合は最も近い15分刻みに調整
+      const adjustedMinutes = Math.round(minutes / 15) * 15;
+      const newTime = `${hours.toString().padStart(2, '0')}:${adjustedMinutes.toString().padStart(2, '0')}`;
+      setSelectedTime(newTime);
+      return;
+    }
+    
+    // 有効な場合はそのまま設定
+    const newTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    setSelectedTime(newTime);
+  };
+
   // initialRequestが変更された場合のみ日時を更新
   React.useEffect(() => {
     if (initialRequest?.startTime) {
@@ -180,25 +247,36 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading = false, in
             <label htmlFor="selectedTime" className="block text-sm font-medium text-gray-700 mb-2">
               開始時間
             </label>
-            <select
-              id="selectedTime"
-              value={selectedTime}
-              onChange={(e) => setSelectedTime(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-            >
-              {Array.from({ length: 60 }, (_, i) => {
-                const hour = Math.floor(i / 4) + 9;
-                const minute = (i % 4) * 15;
-                const timeStr = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
-                return (
-                  <option key={timeStr} value={timeStr}>
-                    {timeStr}
-                  </option>
-                );
-              })}
-            </select>
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={() => adjustTime(-15)}
+                className="w-10 h-10 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center text-red-600 font-bold transition-colors"
+                title="15分減算"
+              >
+                ◀
+              </button>
+              <input
+                id="selectedTime"
+                type="text"
+                value={selectedTime}
+                onChange={(e) => handleTimeInput(e.target.value)}
+                onBlur={(e) => validateAndSetTime(e.target.value)}
+                className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-center font-mono"
+                placeholder="HH:MM"
+                maxLength={5}
+              />
+              <button
+                type="button"
+                onClick={() => adjustTime(15)}
+                className="w-10 h-10 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center text-red-600 font-bold transition-colors"
+                title="15分加算"
+              >
+                ▶
+              </button>
+            </div>
             <p className="text-sm text-gray-500 mt-1">
-              9:00〜23:45の15分間隔
+              9:00〜23:45の15分間隔（直接入力も可能）
             </p>
           </div>
         </div>
