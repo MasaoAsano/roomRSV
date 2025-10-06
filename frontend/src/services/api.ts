@@ -77,7 +77,12 @@ export const roomApi = {
     const params = new URLSearchParams();
     if (startDate) params.append('startDate', startDate.toISOString());
 
-    const response = await api.get<ApiResponse<CalendarData>>(`/rooms/${roomId}/calendar`, { params });
+    const url = `/rooms/${roomId}/calendar`;
+    console.log('🌐 API Request URL:', `${API_BASE_URL}${url}`, 'Params:', params.toString());
+    
+    const response = await api.get<ApiResponse<CalendarData>>(url, { params });
+    console.log('📡 API Response:', response.status, response.data);
+    
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.error || 'カレンダーデータの取得に失敗しました');
     }

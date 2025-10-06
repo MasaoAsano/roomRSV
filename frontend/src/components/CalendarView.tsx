@@ -11,19 +11,28 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
   const [rooms, setRooms] = useState<MeetingRoom[]>([]);
   const [selectedRoomId, setSelectedRoomId] = useState<string>('');
   const [calendarData, setCalendarData] = useState<CalendarData | null>(null);
-  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(new Date());
+  const [currentWeekStart, setCurrentWeekStart] = useState<Date>(() => {
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const diff = today.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // Monday
+    return new Date(today.setDate(diff));
+  });
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadRooms = async () => {
       try {
+        console.log('🏢 Loading rooms...');
         const roomsData = await roomApi.getAllRooms();
+        console.log('✅ Rooms loaded:', roomsData);
         setRooms(roomsData);
         if (roomsData.length > 0) {
+          console.log('🎯 Setting selected room:', roomsData[0].id);
           setSelectedRoomId(roomsData[0].id);
         }
       } catch (err: any) {
+        console.error('❌ Rooms load error:', err);
         setError(err.message || '会議室の読み込みに失敗しました');
       }
     };
@@ -40,9 +49,12 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
     setIsLoading(true);
     setError(null);
     try {
+      console.log('🔍 Loading calendar data for room:', selectedRoomId, 'week:', currentWeekStart);
       const data = await roomApi.getRoomCalendar(selectedRoomId, currentWeekStart);
+      console.log('✅ Calendar data loaded:', data);
       setCalendarData(data);
     } catch (err: any) {
+      console.error('❌ Calendar data load error:', err);
       setError(err.message || 'カレンダーデータの読み込みに失敗しました');
     } finally {
       setIsLoading(false);
