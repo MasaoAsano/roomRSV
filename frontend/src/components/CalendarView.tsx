@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Clock, Users } from 'lucide-react';
 import { CalendarData, CalendarDay, CalendarSlot, MeetingRoom } from '../types';
-import { roomApi, bookingApi } from '../services/api';
+import { roomApi } from '../services/api';
 
 interface CalendarViewProps {
   onBack: () => void;
@@ -40,7 +40,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onBack }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await bookingApi.getRoomCalendar(selectedRoomId, currentWeekStart);
+      const data = await roomApi.getRoomCalendar(selectedRoomId, currentWeekStart);
       setCalendarData(data);
     } catch (err: any) {
       setError(err.message || 'カレンダーデータの読み込みに失敗しました');

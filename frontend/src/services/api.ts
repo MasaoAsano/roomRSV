@@ -70,6 +70,18 @@ export const roomApi = {
       throw new Error(response.data.error || '予約状況の取得に失敗しました');
     }
     return response.data.data;
+  },
+
+  // 会議室のカレンダーデータ取得
+  getRoomCalendar: async (roomId: string, startDate?: Date): Promise<CalendarData> => {
+    const params = new URLSearchParams();
+    if (startDate) params.append('startDate', startDate.toISOString());
+
+    const response = await api.get<ApiResponse<CalendarData>>(`/rooms/${roomId}/calendar`, { params });
+    if (!response.data.success || !response.data.data) {
+      throw new Error(response.data.error || 'カレンダーデータの取得に失敗しました');
+    }
+    return response.data.data;
   }
 };
 
@@ -89,18 +101,6 @@ export const bookingApi = {
     const response = await api.post<ApiResponse<Booking>>('/bookings', bookingData);
     if (!response.data.success || !response.data.data) {
       throw new Error(response.data.error || '予約の作成に失敗しました');
-    }
-    return response.data.data;
-  },
-
-  // 会議室のカレンダーデータ取得
-  getRoomCalendar: async (roomId: string, startDate?: Date): Promise<CalendarData> => {
-    const params = new URLSearchParams();
-    if (startDate) params.append('startDate', startDate.toISOString());
-
-    const response = await api.get<ApiResponse<CalendarData>>(`/rooms/${roomId}/calendar`, { params });
-    if (!response.data.success || !response.data.data) {
-      throw new Error(response.data.error || 'カレンダーデータの取得に失敗しました');
     }
     return response.data.data;
   },
