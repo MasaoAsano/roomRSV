@@ -12,8 +12,9 @@ export class BookingService {
     bookerEmail: string,
     purpose: string
   ): Promise<Booking> {
-    const startTime = request.startTime || new Date();
-    const endTime = request.endTime || new Date(startTime.getTime() + request.duration * 60000);
+    // 日本時間として処理
+    const startTime = request.startTime ? new Date(request.startTime) : new Date();
+    const endTime = request.endTime ? new Date(request.endTime) : new Date(startTime.getTime() + request.duration * 60000);
     
     // 予約時間の重複チェック
     const isAvailable = await this.isRoomAvailable(roomId, startTime, endTime);
@@ -263,7 +264,8 @@ export class BookingService {
   }
 
   private findBookingForTimeSlot(bookings: Booking[], date: string, timeSlot: string): Booking | undefined {
-    const slotTime = new Date(`${date}T${timeSlot}:00.000Z`);
+    // 日本時間（JST）として処理
+    const slotTime = new Date(`${date}T${timeSlot}:00.000+09:00`);
     const slotEndTime = new Date(slotTime.getTime() + 15 * 60000); // 15分後
     
     return bookings.find(booking => {
