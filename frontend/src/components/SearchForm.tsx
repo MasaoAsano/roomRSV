@@ -18,13 +18,6 @@ const getInitialDateTime = () => {
   now.setMinutes(roundedMinutes);
   console.log('🔍 15分刻みに丸めた時刻:', now.toLocaleString('ja-JP'));
   
-  // 時間が18:00を超える場合は翌日の9:00に設定
-  if (now.getHours() >= 18) {
-    now.setDate(now.getDate() + 1);
-    now.setHours(9, 0, 0, 0);
-    console.log('🔍 18:00以降のため翌日9:00に設定:', now.toLocaleString('ja-JP'));
-  }
-  
   // 日本時間で日付を取得（タイムゾーンずれを回避）
   const year = now.getFullYear();
   const month = (now.getMonth() + 1).toString().padStart(2, '0');
